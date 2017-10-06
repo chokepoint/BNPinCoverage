@@ -19,9 +19,12 @@ def import_pin_trace(view):
 
     # If this is a PIE executable, grab the ELF entry point for calculating the slide
     if view.view_type == 'ELF':
-        elf_type = e_types[ord(view.read(0x10, 1))]
-        if elf_type == 'ET_DYN':
-            start_loc = view.entry_point
+        try:
+            elf_type = e_types[ord(view.read(0x10, 1))]
+            if elf_type == 'ET_DYN':
+                start_loc = view.entry_point
+        except TypeError:
+            elf_type = 'ET_EXEC'
             
     with open(filename) as fd:
         first_line = True
